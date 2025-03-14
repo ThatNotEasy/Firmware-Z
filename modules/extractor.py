@@ -97,6 +97,11 @@ def download_file(url, filename):
 def vestel_extractor(response):
     soup = BeautifulSoup(response, 'html.parser')
     products = soup.find_all('div', class_='product-layout')
+    
+    if not products:
+        print(Fore.RED + "\nNo products found for the provided code." + Fore.RESET)
+        return False
+    
     for idx, product in enumerate(products, start=1):
         product_url = product.find('div', class_='image').find('a')['href']
         product_description = product.find('div', class_='caption').find('p').text.strip()
@@ -145,5 +150,7 @@ def vestel_extractor(response):
                         print(Fore.RED + f"Failed to extract {file}: {e}" + Style.RESET_ALL)
         
         print(Fore.GREEN + f"Download and extraction completed: {Fore.RED}{filename}{Fore.RESET}")
+        return True
     else:
-        print(Fore.RED + "Invalid selection.")
+        print(Fore.RED + "Invalid selection." + Fore.RESET)
+        return False
